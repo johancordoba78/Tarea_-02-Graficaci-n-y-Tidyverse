@@ -3,14 +3,49 @@ title: "Tarea_-02-Graficaci-n-y-Tidyverse"
 author: "Johan Córdoba Peraza"
 date: "4/10/2021"
 output: html_document
----
-```{r}
-# dplyr
-library(dplyr)
-```
+
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# Organización y preparativos de la info
 
-# Tarea 
+
+## Carga de paquetes
+```{r carga de paquetes y librerias}
+# dplyr
+library(dplyr)
+
+
+#ggplot2
+library(ggplot2)
+
+```
+# Carga de datos
+
+```{r carga de datos}
+
+rios <- 
+  read.csv(file = 'https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/hidrologia/fdc/fdc.csv')
+
+
+
+# Despliegue de los datos
+View(rios)
+
+# Carga de datos desde un archivo CSV
+covid <- 
+  read.csv(
+    file='https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/minsalud/covid/ultimafecha_CSV_GENERAL.csv', 
+    sep = ","
+  )
+# Despliegue de los datos
+View(covid)
+
+```
+
+
+
+
+
