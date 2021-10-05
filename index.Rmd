@@ -9,26 +9,28 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-# Organización y preparativos de la info
+# Tarea gráficos
 
+### Carga de paquetes a utilizar
 
+```{r carga de paquetes y librerias, message = FALSE}
 ## Carga de paquetes
-```{r carga de paquetes y librerias}
-# dplyr
+
 library(dplyr)
 
-
-#ggplot2
 library(ggplot2)
 
-```
-# Carga de datos
+library(tidyverse)
 
-```{r carga de datos}
+```
+
+### Carga de datos a utilizar
+```{r carga de datos caudales rios y covid}
+
+# Carga de datos
 
 rios <- 
   read.csv(file = 'https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/hidrologia/fdc/fdc.csv')
-
 
 
 # Despliegue de los datos
@@ -37,13 +39,47 @@ View(rios)
 # Carga de datos desde un archivo CSV
 covid <- 
   read.csv(
-    file='https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/minsalud/covid/ultimafecha_CSV_GENERAL.csv', 
+    file = 'https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/minsalud/covid/ultimafecha_CSV_GENERAL.csv', 
     sep = ","
   )
 # Despliegue de los datos
 View(covid)
 
 ```
+
+```{r}
+
+caudales_meses <- rios %>%
+  rename (fecha = Tiempo, Banano = Banano.mm..90km2.,
+         Pandora = Pandora.mm..637km2.) %>%
+  pivot_longer(cols = c(`Banano`,`Pandora`), names_to = "rios", values_to = "Caudal") %>%
+  mutate(fecha = as.Date(fecha, format="%m/%d/%Y")) %>%
+  group_by(rios, mes = format (fecha, "%m"))%>%
+  summarise(Caudal = sum(Caudal))
+  
+  
+```
+```{r_gráfico_cauadales}
+
+ggplot(caudales_meses, aes(x = mes, y = Caudal, fill = rios))+
+  geom_col() +
+  xlab("MESES") +
+  ylab("CAUDALES") +
+  labs(fill="RIOS")
+
+`
+
+``
+```{r_CASOS_NUEVOS_COVID}
+# Histograma con opciones
+covid %>%
+  ggplot(aes(x = nue_posi)) +
+  geom_histogram(binwidth = 250,
+                 color = "black",
+                 fill = "white")
+```
+
+
 
 
 

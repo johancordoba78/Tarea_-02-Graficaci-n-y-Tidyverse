@@ -169,29 +169,24 @@ pre code {
 
 <hr />
 <p>title: “Tarea_-02-Graficaci-n-y-Tidyverse” author: “Johan Córdoba Peraza” date: “4/10/2021” output: html_document</p>
-<div id="organización-y-preparativos-de-la-info" class="section level1">
-<h1>Organización y preparativos de la info</h1>
-<div id="carga-de-paquetes" class="section level2">
-<h2>Carga de paquetes</h2>
-<pre class="r"><code># dplyr
-library(dplyr)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>#ggplot2
-library(ggplot2)</code></pre>
-</div>
-</div>
-<div id="carga-de-datos" class="section level1">
-<h1>Carga de datos</h1>
-<pre class="r"><code>rios &lt;- 
-  read.csv(file = &#39;https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/hidrologia/fdc/fdc.csv&#39;)
+<div id="tarea-gráficos" class="section level1">
+<h1>Tarea gráficos</h1>
+<div id="carga-de-paquetes-a-utilizar" class="section level3">
+<h3>Carga de paquetes a utilizar</h3>
+<pre class="r"><code>## Carga de paquetes
 
+library(dplyr)
+
+library(ggplot2)
+
+library(tidyverse)</code></pre>
+</div>
+<div id="carga-de-datos-a-utilizar" class="section level3">
+<h3>Carga de datos a utilizar</h3>
+<pre class="r"><code># Carga de datos
+
+rios &lt;- 
+  read.csv(file = &#39;https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/hidrologia/fdc/fdc.csv&#39;)
 
 
 # Despliegue de los datos
@@ -200,11 +195,33 @@ View(rios)
 # Carga de datos desde un archivo CSV
 covid &lt;- 
   read.csv(
-    file=&#39;https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/minsalud/covid/ultimafecha_CSV_GENERAL.csv&#39;, 
+    file = &#39;https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/minsalud/covid/ultimafecha_CSV_GENERAL.csv&#39;, 
     sep = &quot;,&quot;
   )
 # Despliegue de los datos
 View(covid)</code></pre>
+<pre class="r"><code>caudales_meses &lt;- rios %&gt;%
+  rename (fecha = Tiempo, Banano = Banano.mm..90km2.,
+         Pandora = Pandora.mm..637km2.) %&gt;%
+  pivot_longer(cols = c(`Banano`,`Pandora`), names_to = &quot;rios&quot;, values_to = &quot;Caudal&quot;) %&gt;%
+  mutate(fecha = as.Date(fecha, format=&quot;%m/%d/%Y&quot;)) %&gt;%
+  group_by(rios, mes = format (fecha, &quot;%m&quot;))%&gt;%
+  summarise(Caudal = sum(Caudal))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;rios&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="{r_gráfico_cauadales}"><code>
+ggplot(caudales_meses, aes(x = mes, y = Caudal, fill = rios))+
+  geom_col() +
+  xlab(&quot;MESES&quot;) +
+  ylab(&quot;CAUDALES&quot;) +
+  labs(fill=&quot;RIOS&quot;)
+</code></pre>
+<pre class="r_casos_nuevos_covid"><code># Histograma con opciones
+covid %&gt;%
+  ggplot(aes(x = nue_posi)) +
+  geom_histogram(binwidth = 250,
+                 color = &quot;black&quot;,
+                 fill = &quot;white&quot;)</code></pre>
+</div>
 </div>
 
 
